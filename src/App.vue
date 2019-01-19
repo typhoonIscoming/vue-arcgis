@@ -13,20 +13,164 @@
 </template>
 
 <script>
+import * as esriLoader from 'esri-loader'
+import { mapActions, mapState } from 'vuex'
+
+
 export default {
   name: "App",
   data() {
     return {
       trsnsname: 'turn-on',
+      mapModules: [
+        "esri/map",
+        "esri/geometry/Extent",
+        "esri/layers/ArcGISTiledMapServiceLayer",
+        "esri/layers/ArcGISDynamicMapServiceLayer",
+        'esri/dijit/Scalebar',
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/PictureMarkerSymbol",
+        "esri/layers/WMSLayer",
+        "esri/Color",
+        "esri/SpatialReference",
+        "esri/geometry/Point",
+        "esri/layers/GraphicsLayer",
+        "esri/layers/FeatureLayer",
+        "esri/graphic",
+        "esri/dijit/InfoWindow",
+        "esri/dijit/Popup",
+        "esri/geometry/Polygon",
+        "esri/domUtils",
+        "esri/InfoWindowBase",
+        "esri/tasks/IdentifyTask",
+        "esri/tasks/IdentifyParameters",
+
+        "dojo/dom-construct",
+        "dojo/dom",
+        "dojo/Evented",
+        "dojo/parser",
+        "dojo/on",
+        "dojo/_base/declare",
+        "dojo/_base/array",
+        "dojo/dom-style",
+        "dojo/dom-attr",
+        "dojo/_base/lang",
+        "dojo/dom-class",
+        "dojo/fx",
+        "dojo/Deferred",
+        "dojo/domReady!"
+      ],
+      isFirstIn: true,
     };
   },
+  computed: {
+    ...mapState({
+      'root': state => state.rootState
+    })
+  },
   methods: {
+    ...mapActions('map', ['setMap']),
     clickLink() {
       this.trsnsname = "turn-on"
-    }
+    },
+    initMap() {
+      const options = {
+        url: 'https://js.arcgis.com/3.24/init.js'
+      }
+      // 加载地图样式
+      esriLoader.loadCss('https://js.arcgis.com/3.24/esri/css/esri.css')
+      esriLoader.loadModules([ ...this.mapModules ], options)
+      .then(this.loading)
+      .then((obj) => {
+        console.log('start')
+        this.setMap(obj)
+      })
+    },
+    loading([
+      Map,
+      Extent,
+      ArcGISTiledMapServiceLayer,
+      ArcGISDynamicMapServiceLayer,
+      Scalebar,
+      SimpleMarkerSymbol,
+      SimpleLineSymbol,
+      SimpleFillSymbol,
+      PictureMarkerSymbol,
+      WMSLayer,
+      Color,
+      SpatialReference,
+      Point,
+      GraphicsLayer,
+      FeatureLayer,
+      Graphic,
+      InfoWindow,
+      Popup,
+      Polygon,
+      domUtils,
+      InfoWindowBase,
+      IdentifyTask,
+      IdentifyParameters,
+
+      domConstruct,
+      dom,
+      Evented,
+      parser,
+      on,
+      declare,
+      array,
+      domStyle,
+      domAttr,
+      lang,
+      domClass,
+      coreFx,
+      Deferred,
+    ]) {
+      return {
+        Map,
+        Extent,
+        ArcGISTiledMapServiceLayer,
+        ArcGISDynamicMapServiceLayer,
+        Scalebar,
+        SimpleMarkerSymbol,
+        SimpleLineSymbol,
+        SimpleFillSymbol,
+        PictureMarkerSymbol,
+        WMSLayer,
+        Color,
+        SpatialReference,
+        Point,
+        GraphicsLayer,
+        FeatureLayer,
+        Graphic,
+        InfoWindow,
+        Popup,
+        Polygon,
+        domUtils,
+        InfoWindowBase,
+        IdentifyTask,
+        IdentifyParameters,
+
+        domConstruct,
+        dom,
+        Evented,
+        parser,
+        on,
+        declare,
+        array,
+        domStyle,
+        domAttr,
+        lang,
+        domClass,
+        coreFx,
+        Deferred,
+      }
+    },
   },
   mounted() {
     var _this = this;
+    this.initMap()
     window.addEventListener(
       "popstate",
       function(e) {
@@ -34,7 +178,14 @@ export default {
       },
       false
     );
-  }
+  },
+  activated() {
+    if(this.isFirstIn) {
+      this.isFirstIn = false
+    } else {
+      this.initMap()
+    }
+  },
 };
 </script>
 

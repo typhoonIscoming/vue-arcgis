@@ -10,13 +10,25 @@
 
 <script>
 import common from "@/components/common";
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {};
   },
   components: {
     common
-  }
+  },
+  computed: {
+    ...mapGetters('map', ['getMap']),
+  },
+  created() {
+    console.log('print map in page B', this.getMap)
+  },
+  watch: {
+    getMap(newval) {
+      console.log('print map in page B in watch', newval)
+    },
+  },
 };
 </script>
 
