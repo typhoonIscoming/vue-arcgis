@@ -7,7 +7,9 @@
       <router-link to="/D" @click.native="clickLink">D</router-link>
     </div>
     <transition :name="trsnsname">
-      <router-view/>
+      <keep-alive>
+        <router-view/>
+      </keep-alive>
     </transition>
   </div>
 </template>
@@ -15,7 +17,7 @@
 <script>
 import * as esriLoader from 'esri-loader'
 import { mapActions, mapState } from 'vuex'
-
+import Vue from 'vue'
 
 export default {
   name: "App",
@@ -86,6 +88,8 @@ export default {
       .then((obj) => {
         console.log('start')
         this.setMap(obj)
+        Vue.prototype.map = obj
+
       })
     },
     loading([
